@@ -4,8 +4,11 @@ import (
 	"github.com/streadway/amqp"
 )
 
+// Message is an alias to amqp.delivery
+type Message = amqp.Delivery
+
 // Consumer is a function that takes a amqp.Delivery struct as parameter
-type Consumer func(amqp.Delivery)
+type Consumer func(Message)
 
 // MessageBroker holds RabbitMQ connections.
 type MessageBroker struct {

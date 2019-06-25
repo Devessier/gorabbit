@@ -67,15 +67,11 @@ func (mb *MessageBroker) Listen(consumer Consumer) error {
 		return err
 	}
 
-	done := make(chan bool)
-
 	go func() {
 		for request := range messages {
 			go consumer(request)
 		}
 	}()
-
-	<-done
 
 	return nil
 }

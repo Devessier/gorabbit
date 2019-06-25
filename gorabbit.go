@@ -9,8 +9,9 @@ type Consumer func(amqp.Delivery)
 
 // MessageBroker holds RabbitMQ connections.
 type MessageBroker struct {
+	*amqp.Channel
+
 	conn *amqp.Connection
-	ch   *amqp.Channel
 	q    amqp.Queue
 }
 
@@ -40,8 +41,9 @@ func NewMessageBroker(amqpURL, queue string) (*MessageBroker, error) {
 	}
 
 	return &MessageBroker{
-		conn,
 		ch,
+
+		conn,
 		q,
 	}, nil
 }
@@ -49,7 +51,7 @@ func NewMessageBroker(amqpURL, queue string) (*MessageBroker, error) {
 // Listen permits to consume messages from the declared queue.
 // The message has to be acknowledged
 func (mb *MessageBroker) Listen(consumer Consumer) error {
-	messages, err := mb.ch.Consume(
+	messages, err := mb.Consume(
 		mb.q.Name,
 		"",
 		false,
@@ -77,6 +79,6 @@ func (mb *MessageBroker) Listen(consumer Consumer) error {
 
 // Close closes all open connections
 func (mb *MessageBroker) Close() {
-	mb.ch.Close()
+	mb.Channel.Close()
 	mb.conn.Close()
 }

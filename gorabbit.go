@@ -16,8 +16,8 @@ type MessageBroker struct {
 
 // NewMessageBroker tries to instantiate a new MessageBroker.
 // This MessageBroker can consume messages from or send messages to a queue.
-func NewMessageBroker(url string) (*MessageBroker, error) {
-	conn, err := amqp.Dial(url)
+func NewMessageBroker(amqpURL, queue string) (*MessageBroker, error) {
+	conn, err := amqp.Dial(amqpURL)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func NewMessageBroker(url string) (*MessageBroker, error) {
 	}
 
 	q, err := ch.QueueDeclare(
-		"af_pdf",
+		queue,
 		true,
 		false,
 		false,
